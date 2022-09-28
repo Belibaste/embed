@@ -21,7 +21,10 @@ describe('Services Regexps', () => {
     const urls = [
       { source: 'https://www.youtube.com/watch?v=wZZ7oFKsKzY&t=120', embed: 'https://www.youtube.com/embed/wZZ7oFKsKzY?start=120' },
       { source: 'https://www.youtube.com/embed/_q51LZ2HpbE?list=PLLy6qvPKpdlV3OAw00EuZMoYPz4pYuwuN', embed: 'https://www.youtube.com/embed/_q51LZ2HpbE?list=PLLy6qvPKpdlV3OAw00EuZMoYPz4pYuwuN' },
-      { source: 'https://www.youtube.com/watch?time_continue=173&v=Nd9LbCWpHp8', embed: 'https://www.youtube.com/embed/Nd9LbCWpHp8?start=173' }
+      { source: 'https://www.youtube.com/watch?time_continue=173&v=Nd9LbCWpHp8', embed: 'https://www.youtube.com/embed/Nd9LbCWpHp8?start=173' },
+      { source: 'https://www.youtube.com/watch?v=efBBjIK3b8I&list=LL&t=1337', embed: 'https://www.youtube.com/embed/efBBjIK3b8I?start=1337' },
+      { source: 'https://www.youtube.com/watch?v=yQUeAin7fII&list=RDMMnMXCzscqi_M', embed: 'https://www.youtube.com/embed/yQUeAin7fII?' },
+      { source: 'https://www.youtube.com/watch?v=3kw2sttGXMI&list=FLgc4xqIMDoiP4KOTFS21TJA', embed: 'https://www.youtube.com/embed/3kw2sttGXMI?' },
     ];
 
     urls.forEach(url => {
@@ -252,6 +255,10 @@ describe('Services Regexps', () => {
         source: 'https://twitter.com/codex_team/status/1202295536826630145',
         embed: 'https://twitframe.com/show?url=https://twitter.com/codex_team/status/1202295536826630145'
       },
+      {
+        source: 'https://twitter.com/codex_team/status/1202295536826630145?s=20&t=wrY8ei5GBjbbmNonrEm2kQ',
+        embed: 'https://twitframe.com/show?url=https://twitter.com/codex_team/status/1202295536826630145?s=20&t=wrY8ei5GBjbbmNonrEm2kQ'
+      },
     ];
 
     urls.forEach(url => {
@@ -274,6 +281,10 @@ describe('Services Regexps', () => {
       {
         source: 'https://www.instagram.com/p/B--iRCFHVxI/',
         embed: 'https://www.instagram.com/p/B--iRCFHVxI/embed'
+      },
+      {
+        source: 'https://www.instagram.com/p/CfQzzGNphD8/?utm_source=ig_web_copy_link',
+        embed: 'https://www.instagram.com/p/CfQzzGNphD8/embed'
       },
     ];
 
@@ -389,3 +400,18 @@ describe('Services Regexps', () => {
   });
 
 });
+
+describe('Miro service', () => {
+  it('should correctly parse URL got from a browser', () => {
+    const regularBoardUrl = 'https://miro.com/app/board/10J_kw57KxQ=/';
+    const event = composePasteEventMock('pattern', 'miro', regularBoardUrl);
+
+    embed.onPaste(event);
+
+    expect(patterns.miro.test(regularBoardUrl)).to.be.true;
+    expect(embed.data.service).to.be.equal('miro');
+    expect(embed.data.embed).to.be.equal('https://miro.com/app/live-embed/10J_kw57KxQ=');
+    expect(embed.data.source).to.be.equal(regularBoardUrl);
+  })
+});
+
